@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno&family=Press+Start+2P&display=swap');
+
+body {
+    background-color: #FF7B54;
+    font-family: 'MuseoModerno', cursive;
+}
+
+#seleccionar-mascota {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo {
+    color: white;
+    font-size: 32px;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.subtitulo {
+    color: white;
+    font-size: 20px;
+}
+
+.tarjetas, .tarjetas-ataques {
+    display: flex;
+    gap: 10px;
+}
+
+
+.tarjeta-de-mokepon {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 130px;
+    height: 140px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 10px;
+    border-radius: 20px;
+    background: #FFB26B;
+    font-size: 12px;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarjeta-de-mokepon img {
+    width: 80px;
+}
+
+.tarjeta-de-mokepon:hover {
+    border: 5px solid #939B62;
+}
+
+input {
+    display: none;
+}
+
+input:checked + label {
+    border: 5px solid #939B62;
+}
+
+#btn-seleccionar-mascota {
+    width: 150px;
+    height: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 15px;
+    border: 2px solid #FFB26B;
+    border-radius: 20px;
+    background-color: #939B62;
+    color: #FFD56F;
+    font-family: 'MuseoModerno', cursive;
+}
+
+#seleccionar-ataque {
+    flex-direction: column;
+    align-items: center;
+}
+
+.boton-de-ataque {
+    width: 100px;
+    height: 40px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 5px;
+    border: 2px solid #FFB26B;
+    border-radius: 20px;
+    background-color: #939B62;
+    color: #FFD56F;
+    font-family: 'MuseoModerno', cursive;
+}
+
+#mensajes {
+    width: 280px;
+    background: #FFD56F;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center
+}
+
+#resultado {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.ataques {
+    display: grid;
+    grid-template-columns: 100px 100px;
+}
+
+.ataques-jugador, .ataques-enemigo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 360px) {
+    .tarjetas, .tarjetas-ataques {
+        flex-direction: column;
+    }
+}
