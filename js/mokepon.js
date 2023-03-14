@@ -1,25 +1,75 @@
+const btnMascota = document.getElementById("btn-seleccionar-mascota")
+const btnFuego = document.getElementById("btn-fuego")
+const btnAgua = document.getElementById("btn-agua")
+const btnTierra = document.getElementById("btn-tierra")
+
+const seccionSeleccionarMascota = document.getElementById("seleccionar-mascota")
+const seccionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
+const seccionReiniciar = document.getElementById("reiniciar")
+const seccionMensajes = document.getElementById("resultado")
+
+const ataquesJugador = document.getElementById("ataques-del-jugador")
+const ataquesEnemigo = document.getElementById("ataques-del-enemigo")
+
+const spanVidasEnemigo = document.getElementById("vidas-enemigo")
+const spanVidasJugador = document.getElementById("vidas-jugador")
+const spanMascotaJugador = document.getElementById("mascota-jugador")
+const spanMascotaEnemigo = document.getElementById("mascota-enemigo")
+
+let mokepones = []
 let ataqueJugador = ""
 let ataqueEnemigo = ""
 let vidasJugador = 3
 let vidasEnemigo = 3
 
+class Mokepon {
+    constructor(nombre, imagen, vida) {
+        this.nombre = nombre
+        this.imagen = imagen
+        this.vida = vida
+        this.ataques = []
+    }
+}
+
+let hipodoge = new Mokepon("Hipodoge", "./assets/hipodoge.png", 5)
+let capipepo = new Mokepon("Capipepo", "./assets/capipepo.png", 5)
+let ratigueya = new Mokepon("Ratigueya", "./assets/ratigueya.png", 5)
+
+hipodoge.ataques.push(
+    {nombre: "💧", id: "boton-agua"},
+    {nombre: "💧", id: "boton-agua"},
+    {nombre: "💧", id: "boton-agua"},
+    {nombre: "🔥", id: "boton-fuego"},
+    {nombre: "🌱", id: "boton-tierra"}
+    )
+
+capipepo.ataques.push(
+    {nombre: "🌱", id: "boton-tierra"},
+    {nombre: "🌱", id: "boton-tierra"},
+    {nombre: "🌱", id: "boton-tierra"},
+    {nombre: "💧", id: "boton-agua"},
+    {nombre: "🔥", id: "boton-fuego"}
+    )
+
+ratigueya.ataques.push(
+    {nombre: "🔥", id: "boton-fuego"},
+    {nombre: "🔥", id: "boton-fuego"},
+    {nombre: "🔥", id: "boton-fuego"},
+    {nombre: "💧", id: "boton-agua"},
+    {nombre: "🌱", id: "boton-tierra"}
+    )
+            
 const aleatorio = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 const iniciarJuego = () => {
-    const btnMascota = document.getElementById("btn-seleccionar-mascota").addEventListener("click", seleccionarMascotaJugador)
-    const seccionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
+    btnMascota.addEventListener("click", seleccionarMascotaJugador)
     seccionSeleccionarAtaque.style.display = "none"
-    const seccionReiniciar = document.getElementById("reiniciar")
     seccionReiniciar.style.display = "none"
 }
 
 const crearMensaje = (veredictoFinal) => {
-    let seccionMensajes = document.getElementById("resultado")
-    let ataquesJugador = document.getElementById("ataques-del-jugador")
-    let ataquesEnemigo = document.getElementById("ataques-del-enemigo")
-    
     let nuevoAtaqueDelJugador = document.createElement("p")
     let nuevoAtaqueDelEnemigo = document.createElement("p")
 
@@ -38,7 +88,6 @@ const seleccionarMascotaJugador = () => {
     const inputHipodoge = document.getElementById("hipodoge").checked
     const inputCapipepo = document.getElementById("capipepo").checked
     const inputRatigueya = document.getElementById("ratigueya").checked
-    let spanMascotaJugador = document.getElementById("mascota-jugador")
 
     if(inputHipodoge){
         resp = "Hipodoge"
@@ -52,9 +101,7 @@ const seleccionarMascotaJugador = () => {
 
     if(resp !== ""){
         spanMascotaJugador.innerHTML = resp
-        const seccionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
         seccionSeleccionarAtaque.style.display = "flex"
-        const seccionSeleccionarMascota = document.getElementById("seleccionar-mascota")
         seccionSeleccionarMascota.style.display = "none"
         seleccionarMascotaEnemigo()
     }
@@ -63,7 +110,6 @@ const seleccionarMascotaJugador = () => {
 const seleccionarMascotaEnemigo = () => {
     const mascota = aleatorio(0, 2)
     const mascotas = ["Hipodoge", "Capipepo", "Ratigueya"]
-    let spanMascotaEnemigo = document.getElementById("mascota-enemigo")
     spanMascotaEnemigo.innerHTML = mascotas[mascota]
 }
 
@@ -80,11 +126,10 @@ const ataqueAleatorioEnemigo = () => {
 }
 
 const ataque = (elemento) => {
-    let btnSeleccionarMascota = document.getElementById("btn-seleccionar-mascota")
     let radioHipodoge = document.getElementById("hipodoge")
     let radioCapipepo = document.getElementById("capipepo")
     let radioRatigueya = document.getElementById("ratigueya")
-    btnSeleccionarMascota.disabled = true
+    btnMascota.disabled = true
     radioHipodoge.disabled = true
     radioCapipepo.disabled = true
     radioRatigueya.disabled = true
@@ -113,8 +158,6 @@ const combate = () => {
         veredicto = "Perdiste 💥"
     }
     
-    let spanVidasEnemigo = document.getElementById("vidas-enemigo")
-    let spanVidasJugador = document.getElementById("vidas-jugador")
     if(veredicto === "Ganaste! 🎉"){
         vidasEnemigo--
         spanVidasEnemigo.innerHTML = vidasEnemigo
@@ -127,8 +170,6 @@ const combate = () => {
 }
 
 const checkWin = () => {
-    let seccionMensajes = document.getElementById("resultado")
-    const seccionReiniciar = document.getElementById("reiniciar")
     if(vidasEnemigo === 0){
         seccionMensajes.innerHTML = "🎊DERROTASTE AL ENEMIGO!🎊"
         seccionReiniciar.style.display = "flex"
@@ -141,10 +182,6 @@ const checkWin = () => {
 }
 
 const disableButtons = () => {
-    let btnFuego = document.getElementById("btn-fuego")
-    let btnAgua = document.getElementById("btn-agua")
-    let btnTierra = document.getElementById("btn-tierra")
-
     btnFuego.disabled = true
     btnAgua.disabled = true
     btnTierra.disabled = true
