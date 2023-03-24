@@ -55,6 +55,7 @@ body {
 
 .tarjeta-de-mokepon:hover {
     border: 5px solid #939B62;
+    cursor: pointer;
 }
 
 input {
@@ -76,6 +77,7 @@ input:checked + label {
     background-color: #939B62;
     color: #FFD56F;
     font-family: 'MuseoModerno', cursive;
+    cursor: pointer;
 }
 
 #seleccionar-ataque {
@@ -87,7 +89,7 @@ input:checked + label {
 .boton-de-ataque {
     width: 100px;
     height: 40px;
-    padding: 10px;
+    padding: 5px;
     box-sizing: border-box;
     margin: 5px;
     border: 2px solid #FFB26B;
@@ -95,6 +97,8 @@ input:checked + label {
     background-color: #939B62;
     color: #FFD56F;
     font-family: 'MuseoModerno', cursive;
+    font-size: large;
+    cursor: pointer;
 }
 
 #mensajes {
