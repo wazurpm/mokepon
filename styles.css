@@ -101,6 +101,11 @@ input:checked + label {
     cursor: pointer;
 }
 
+.boton-de-ataque:disabled {
+    opacity: 50%;
+    cursor: auto;
+}
+
 #mensajes {
     width: 280px;
     background: #FFD56F;
@@ -130,7 +135,7 @@ input:checked + label {
     align-items: center;
 }
 
-@media (max-width: 360px) {
+@media (max-width: 500px) {
     .tarjetas, .tarjetas-ataques {
         flex-direction: column;
     }

@@ -1,7 +1,4 @@
 const btnMascota = document.getElementById("btn-seleccionar-mascota")
-const btnFuego = document.getElementById("btn-fuego")
-const btnAgua = document.getElementById("btn-agua")
-const btnTierra = document.getElementById("btn-tierra")
 
 const seccionSeleccionarMascota = document.getElementById("seleccionar-mascota")
 const seccionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
@@ -18,15 +15,14 @@ const spanMascotaJugador = document.getElementById("mascota-jugador")
 const spanMascotaEnemigo = document.getElementById("mascota-enemigo")
 const contenedorTarjetas = document.getElementById("contenedor-tarjetas")
 
-const mascotas = ["Hipodoge", "Capipepo", "Ratigueya"]
-
 let mokepones = []
 let opcionDeMokepones = ""
-let ataqueJugador = ""
-let ataqueEnemigo = ""
+let ataqueJugador = []
+let ataqueEnemigo = []
 let mascotaJugador
 let vidasJugador = 3
 let vidasEnemigo = 3
+let turnosJugador = 5
 
 class Mokepon {
     constructor(nombre, imagen, vida) {
@@ -90,8 +86,8 @@ const iniciarJuego = () => {
 }
 
 const crearMensaje = (veredictoFinal) => {
-    let nuevoAtaqueDelJugador = document.createElement("p")
-    let nuevoAtaqueDelEnemigo = document.createElement("p")
+let nuevoAtaqueDelJugador = document.createElement("p")
+let nuevoAtaqueDelEnemigo = document.createElement("p")
 
     seccionMensajes.innerHTML = veredictoFinal
     nuevoAtaqueDelJugador.innerHTML = ataqueJugador
@@ -100,7 +96,7 @@ const crearMensaje = (veredictoFinal) => {
     ataquesJugador.appendChild(nuevoAtaqueDelJugador)
     ataquesEnemigo.appendChild(nuevoAtaqueDelEnemigo)
 
-    checkWin()
+    checkWin(veredictoFinal)
 }
 
 const seleccionarMascotaJugador = () => {
@@ -134,90 +130,103 @@ const seleccionarMascotaJugador = () => {
 
 const extraerAtaques = (mascotaJugador) => {
     const ataques = mokepones.find(mokepon => mokepon.nombre == mascotaJugador).ataques
+    let number = 0
     ataques.forEach((ataque) => {
         opcionDeAtaque = `
         <button 
-        id=${ataque.id} 
+        id=${ataque.id + number}
         class="boton-de-ataque" 
-        onclick="ataque('${ataque.nombre}')">
+        onclick="ataque('${ataque.nombre}', '${ataque.id + number}')">
         ${ataque.nombre}
         </button>
         `
         opcionesAtaques.innerHTML += opcionDeAtaque
+        number++
     })
 }
 
 const seleccionarMascotaEnemigo = () => {
     const mascotaAleatoria = mokepones[aleatorio(0, mokepones.length-1)]
     mascotaEnemigo = mascotaAleatoria
-    spanMascotaEnemigo.innerHTML = mascotaAleatoria.nombre
+    spanMascotaEnemigo.innerHTML = mascotaEnemigo.nombre
 }
 
 const ataqueAleatorioEnemigo = () => {
-    const ataque = aleatorio(1, 3)
-    if(ataque === 1){
-        ataqueEnemigo = "FUEGO"
-    } else if(ataque === 2){
-        ataqueEnemigo = "AGUA"
-    } else if(ataque === 3){
-        ataqueEnemigo = "TIERRA"
+    let setAtaques = new Set()
+    const ataquesMascotaEnemigo = mascotaEnemigo.ataques.map((ataqueIndividual) => {
+        ataqueIndividual.id = ataqueIndividual.id + Math.random()
+        return ataqueIndividual
+    })
+    
+    while(setAtaques.size < 5){
+        const ataque = ataquesMascotaEnemigo[aleatorio(0, ataquesMascotaEnemigo.length-1)]
+        setAtaques.add(ataque)
     }
+    arrayAtaques = Array.from(setAtaques.values())
+
+    arrayAtaques.forEach((ataqueIndividual) => {
+        ataqueEnemigo.push(ataqueIndividual.nombre)
+    })
+    
     combate()
 }
 
-const ataque = (elemento) => {
-    if(elemento === "🔥"){
-        ataqueJugador = "FUEGO"
-    }else if(elemento === "💧"){
-        ataqueJugador = "AGUA"
-    }else if(elemento === "🌱"){
-        ataqueJugador = "TIERRA"
+const ataque = (elemento, btnId) => {
+    ataqueJugador.push(elemento)
+    turnosJugador--
+
+    disableButtons(btnId)
+    if(turnosJugador === 0){
+        ataqueAleatorioEnemigo()
     }
-    ataqueAleatorioEnemigo()
 }
 
 const combate = () => {
+    let contador = 0
     let veredicto = ""
-    if(ataqueJugador === ataqueEnemigo){
-        veredicto = "Empate 💤"
-    }else if(ataqueJugador === "FUEGO" && ataqueEnemigo === "TIERRA"){
-        veredicto = "Ganaste! 🎉"
-    }else if(ataqueJugador === "AGUA" && ataqueEnemigo === "FUEGO"){
-        veredicto = "Ganaste! 🎉"
-    }else if(ataqueJugador === "TIERRA" && ataqueEnemigo === "AGUA"){
-        veredicto = "Ganaste! 🎉"
-    }else{
-        veredicto = "Perdiste 💥"
-    }
-    
-    if(veredicto === "Ganaste! 🎉"){
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    }else if(veredicto === "Perdiste 💥"){
-        vidasJugador--
-        spanVidasJugador.innerHTML = vidasJugador
+    let puntosJugador = 0
+    let puntosEnemigo = 0
+    while(contador < 5){
+        if(ataqueJugador[contador] === ataqueEnemigo[contador]){
+            puntosEnemigo++
+            puntosJugador++
+        }else if(ataqueJugador[contador] === "🔥" && ataqueEnemigo[contador] === "🌱"){
+            puntosJugador++
+        }else if(ataqueJugador[contador] === "💧" && ataqueEnemigo[contador] === "🔥"){
+            puntosJugador++
+        }else if(ataqueJugador[contador] === "🌱" && ataqueEnemigo[contador] === "💧"){
+            puntosJugador++
+        }else {
+            puntosEnemigo++
+        }
+        contador++
     }
 
+    console.log(puntosJugador)
+    console.log(puntosEnemigo)
+    
+    if(puntosJugador === puntosEnemigo){
+        veredicto = "Empate! 💤"
+    } else {
+        veredicto = puntosJugador > puntosEnemigo ? "Ganaste! 🎉" : "Perdiste 💥"
+    }
     crearMensaje(veredicto)
 }
 
-const checkWin = () => {
-    if(vidasEnemigo === 0){
+const checkWin = (veredictoFinal) => {
+    if(veredictoFinal === "Ganaste! 🎉"){
         seccionMensajes.innerHTML = "🎊DERROTASTE AL ENEMIGO!🎊"
-        seccionReiniciar.style.display = "flex"
-        disableButtons()
-    }else if(vidasJugador === 0){
+    }else if(veredictoFinal === "Perdiste 💥"){
         seccionMensajes.innerHTML = "💀EL ENEMIGO TE DERROTÓ!💀"
-        seccionReiniciar.style.display = "flex"
-        disableButtons()
     }
+
+    seccionReiniciar.style.display = "flex"
+    disableButtons()
 }
 
-const disableButtons = () => {
-    botonesDeAtaque = Array.from(document.getElementsByClassName("boton-de-ataque"))
-    botonesDeAtaque.forEach((boton) => {
-        boton.disabled = true
-    })
+const disableButtons = (btnId) => {
+    boton = document.getElementById(btnId)
+    boton.disabled = true
 }
 
 const reiniciarJuego = () => {
